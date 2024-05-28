@@ -5,12 +5,8 @@ import javax.inject.Inject;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.ChatMessageType;
-import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.api.TileObject;
-import net.runelite.api.events.GameObjectSpawned;
-import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.*;
+import net.runelite.api.events.*;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
@@ -32,7 +28,8 @@ public class DoorHighlighterPlugin extends Plugin
 	private DoorHighlighterConfig config;
 
 	@Getter
-	private final List<TileObject> doors = new ArrayList<TileObject>();
+	private final List<WallObject> doors = new ArrayList<WallObject>();
+
 
 	@Override
 	protected void startUp() throws Exception
@@ -61,12 +58,20 @@ public class DoorHighlighterPlugin extends Plugin
 		return configManager.getConfig(DoorHighlighterConfig.class);
 	}
 
-	//this event will be utilzied to detect if a door renders
 	@Subscribe
-	public void onGameObjectSpawned(GameObjectSpawned event)
+	public void onWallObjectSpawned(WallObjectSpawned event)
 	{
-		if(Doors.DOOR_IDS.contains(event.getGameObject().getId())){
-			///get code from overlay agility plugin
+		if(Doors.DOOR_IDS.contains(event.getWallObject().getId())){
+			log.info("A door has spawned");
+			doors.add(event.getWallObject());
+		}
 	}
+
+	@Subscribe
+	public void onWallObjectDespawned(WallObjectDespawned event)
+	{
+		log.info("A door has despawned");
+        doors.remove(event.getWallObject());
 	}
+
 }
