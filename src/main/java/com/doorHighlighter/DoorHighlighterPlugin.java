@@ -11,6 +11,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.overlay.OverlayManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,16 +31,24 @@ public class DoorHighlighterPlugin extends Plugin
 	@Getter
 	private final List<WallObject> doors = new ArrayList<WallObject>();
 
+	@Inject
+	private OverlayManager overlayManager;
+
+	@Inject
+	private DoorOverlay doorOverlay;
 
 	@Override
 	protected void startUp() throws Exception
 	{
 		log.info("Example started!");
+		overlayManager.add(doorOverlay);
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
+		overlayManager.remove(doorOverlay);
+		doors.clear();
 		log.info("Example stopped!");
 	}
 
@@ -70,8 +79,10 @@ public class DoorHighlighterPlugin extends Plugin
 	@Subscribe
 	public void onWallObjectDespawned(WallObjectDespawned event)
 	{
-		log.info("A door has despawned");
-        doors.remove(event.getWallObject());
+		if(Doors.DOOR_IDS.contains(event.getWallObject().getId())) {
+			log.info("A door has despawned");
+			doors.remove(event.getWallObject());
+		}
 	}
 
 }
