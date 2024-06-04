@@ -18,7 +18,7 @@ import java.util.List;
 
 @Slf4j
 @PluginDescriptor(
-	name = "Example"
+		name = "Closed Door Highlighter"
 )
 public class DoorHighlighterPlugin extends Plugin
 {
@@ -40,7 +40,7 @@ public class DoorHighlighterPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		log.info("Example started!");
+		log.info("Closed Door Highlighter Started");
 		overlayManager.add(doorOverlay);
 	}
 
@@ -49,16 +49,7 @@ public class DoorHighlighterPlugin extends Plugin
 	{
 		overlayManager.remove(doorOverlay);
 		doors.clear();
-		log.info("Example stopped!");
-	}
-
-	@Subscribe
-	public void onGameStateChanged(GameStateChanged gameStateChanged)
-	{
-		if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
-		{
-			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Example says " + config.greeting(), null);
-		}
+		log.info("Closed Door Highlighter Stop");
 	}
 
 	@Provides
@@ -71,7 +62,6 @@ public class DoorHighlighterPlugin extends Plugin
 	public void onWallObjectSpawned(WallObjectSpawned event)
 	{
 		if(Doors.DOOR_IDS.contains(event.getWallObject().getId())){
-			log.info("A door has spawned");
 			doors.add(event.getWallObject());
 		}
 	}
@@ -80,7 +70,6 @@ public class DoorHighlighterPlugin extends Plugin
 	public void onWallObjectDespawned(WallObjectDespawned event)
 	{
 		if(Doors.DOOR_IDS.contains(event.getWallObject().getId())) {
-			log.info("A door has despawned");
 			doors.remove(event.getWallObject());
 		}
 	}
