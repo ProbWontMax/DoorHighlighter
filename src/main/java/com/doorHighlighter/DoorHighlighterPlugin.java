@@ -58,6 +58,7 @@ public class DoorHighlighterPlugin extends Plugin
 		return configManager.getConfig(DoorHighlighterConfig.class);
 	}
 
+
 	@Subscribe
 	public void onWallObjectSpawned(WallObjectSpawned event)
 	{
@@ -69,8 +70,19 @@ public class DoorHighlighterPlugin extends Plugin
 	@Subscribe
 	public void onWallObjectDespawned(WallObjectDespawned event)
 	{
-		if(Doors.DOOR_IDS.contains(event.getWallObject().getId())) {
-			doors.remove(event.getWallObject());
+		doors.remove(event.getWallObject());
+		log.info(String.valueOf(doors.size()));
+	}
+
+	@Subscribe
+	public void onGameStateChanged(GameStateChanged event)
+	{
+		switch (event.getGameState())
+		{
+			case HOPPING:
+			case LOADING:
+				doors.clear();
+				break;
 		}
 	}
 

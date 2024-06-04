@@ -1,9 +1,6 @@
 package com.doorHighlighter;
 
-import net.runelite.client.config.Alpha;
-import net.runelite.client.config.Config;
-import net.runelite.client.config.ConfigGroup;
-import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.*;
 
 import java.awt.*;
 
@@ -26,7 +23,8 @@ public interface DoorHighlighterConfig extends Config
 			name = "Render Distance",
 			description = "Maximum Distance To Render door highlights"
 	)
+	@Range(max=50)
 	default int renderDistance() {
-		return 2350;
+		return 20;
 	}
 }
